@@ -13,7 +13,7 @@ import java.util.TimeZone;
 		PollsApplication.class,
 		Jsr310JpaConverters.class 
 })
-public class PollsApplication {
+public class PollsApplication { //Added by Charith version_1.2
 
 	@PostConstruct
 	void init() {
