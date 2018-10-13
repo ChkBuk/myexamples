@@ -1,0 +1,141 @@
+
+@import url("../common/base.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
+.app-header {
+	position: fixed;
+	width: 100%;
+	height:60px;
+	padding: 5px;
+	/*box-shadow: 0 2px 8px #6484a5;*/
+	z-index: 10;
+	padding: 0;
+	background: #ee5893;
+}
+.ant-layout-header {
+    line-height: 37px;
+}
+.ant-layout {
+    display: tablet !important;
+}
+.phone-div {
+  float: left;
+ 	padding: 8px 0 0 20px;
+}
+.phone-div a{
+	text-decoration:none;
+	color: white;
+	font-weight: bold;
+}
+.fa-phone-square{
+	color: white;
+	font-size: 30px;
+}
+.fa-phone-square::before {
+	margin: 10px;
+}
+.breadcrumb-div {
+	float:right;
+	font-size: 1.875em;
+	height: 50%;
+}
+.twhite {color:#fff;}
+/* Breadcum bar */
+.bg-grey {background:#efefef}
+.breadcrumb {background: none; margin: 0;font-weight: 300;padding-left: 0; font-size: 13px;}
+.breadcrumb a {color: #ffffff; font-weight: bold;}
+.breadcrumb > .active {color: #696969;}
+.breadcrumb > li + li::before {content: "\203A";color: #fff; font-weight: bold; padding: 0 8px;}
+.breadcrumb li {
+	float: left;
+  list-style-type: none;
+	display: block;
+	color:black;
+}
+
+  .app-title a:hover {
+    text-decoration: none;
+  }
+  .container  {
+    text-align:right;
+  }
+  .container li {
+    list-style-type: none;
+  }
+
+
+  .app-menu {
+   /*  float: right; */
+  }
+
+  .app-menu > li {
+    padding: 0 20px;
+  }
+
+  .app-menu > li > a {
+    padding: 0 20px;
+    margin: 0 -20px;
+  }
+
+  .app-menu > li > a > i {
+    margin-right: 0 !important;
+  }
+
+  .profile-dropdown-menu {
+    min-width: 180px;
+  }
+
+  .profile-menu .user-full-name-info {
+    font-size: 17px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.85);
+  }
+
+  .profile-menu .username-info {
+    font-size: 14px;
+    color: rgba(0,0,0,0.65);
+  }
+
+  .dropdown-item {
+    padding: 10px 12px;
+  }
+
+  .dropdown-item a {
+    padding: 10px 12px;
+    margin: -10px -12px;
+  }
+
+  .nav-icon {
+    font-size: 20px;
+  }
+
+  .poll-icon {
+    margin-top: -4px;
+  }
+
+
+@media (max-width: 768px) {
+  .app-title a {
+    font-size: 20px;
+  }
+
+  .app-menu > li {
+    padding: 0 15px;
+  }
+
+  .app-menu > li > a {
+    padding: 0 15px;
+    margin: 0 -15px;
+  }
+}
+
+.input-group-addon:not(:first-child), .input-group-btn:not(:first-child)>.btn, .input-group-btn:not(:first-child)>.btn-group>.btn, .input-group-btn:not(:first-child)>.dropdown-toggle, .input-group-btn:not(:last-child)>.btn-group:not(:first-child)>.btn, .input-group-btn:not(:last-child)>.btn:not(:first-child) {
+    border-bottom-left-radius: 0;
+    background: slategray;
+    border-top-left-radius: 0;
+    color: white;
+		max-width: 200px;
+}
+.bg-dark {
+    background-color: #18486b !important;
+    color: white;
+}
