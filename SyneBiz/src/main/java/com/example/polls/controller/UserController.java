@@ -10,6 +10,9 @@ import com.example.polls.security.UserPrincipal;
 import com.example.polls.service.PollService;
 import com.example.polls.security.CurrentUser;
 import com.example.polls.util.AppConstants;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +65,7 @@ public class UserController {
         long voteCount = voteRepository.countByUserId(user.getId());
 
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), pollCount, voteCount);
-
+System.out.println("****************---- "+userProfile.getName());
         return userProfile;
     }
 

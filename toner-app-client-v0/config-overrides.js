@@ -9,6 +9,8 @@ module.exports = function override(config, env) {
           "@layout-header-background": "#FFFFFF",
           "@layout-footer-background": "#FFFFFF" 
       },
+	   test: /\.css$/,
+       loader: 'style-loader!css-loader',
       javascriptEnabled: true
     })(config, env);
     return config;
