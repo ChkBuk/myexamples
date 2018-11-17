@@ -82,9 +82,10 @@ export function checkEmailAvailability(email) {
 
 export function getCurrentUser() {
     if(!localStorage.getItem(ACCESS_TOKEN)) {
+      console.log("No Access token set.");
         return Promise.reject("No access token set.");
     }
-
+console.log("Access token set.");
     return request({
         url: API_BASE_URL + "/user/me",
         method: 'GET'
@@ -117,6 +118,15 @@ export function getUserVotedPolls(username, page, size) {
         method: 'GET'
     });
 }
+/*export function getAllBrands(page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/brands?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}*/
 export function getAllBrands(page, size) {
     page = page || 0;
     size = size || POLL_LIST_SIZE;
@@ -124,5 +134,45 @@ export function getAllBrands(page, size) {
     return request({
         url: API_BASE_URL + "/brands?page=" + page + "&size=" + size,
         method: 'GET'
+    });
+}
+export function createBrand(brandData) {
+    return request({
+        url: API_BASE_URL + "/brands",
+        method: 'POST',
+        body: JSON.stringify(brandData)
+    });
+}
+export function getAllFamilys(page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/familys?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
+export function createFamily(familyData) {
+    return request({
+        url: API_BASE_URL + "/familys",
+        method: 'POST',
+        body: JSON.stringify(familyData)
+    });
+}
+export function getAllModels(page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/models?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
+export function createModel(modelData) {
+  console.log(" modelData :"+modelData.normal_price);
+    return request({
+        url: API_BASE_URL + "/models",
+        method: 'POST',
+        body: JSON.stringify(modelData)
     });
 }

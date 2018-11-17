@@ -6,16 +6,23 @@ import './App.css';
 import {
   Route,
   withRouter,
+  Link,
   Switch
 } from 'react-router-dom';
 
-import { getCurrentUser } from '../util/APIUtils';
+import { getCurrentUser,getAllBrands,getAllFamilys,getAllModels } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
-
 import PollList from '../poll/PollList';
 import NewPoll from '../poll/NewPoll';
 import Login from '../user/login/Login';
 import Signup from '../user/signup/Signup';
+import Brand from '../poll/Brand';
+import BrandList from '../poll/BrandList';
+import FamilyList from '../poll/FamilyList';
+import ModelList from '../poll/ModelList';
+import NewBrand from '../poll/NewBrand';
+import NewFamily from '../poll/NewFamily';
+import NewModel from '../poll/NewModel';
 import Profile from '../user/profile/Profile';
 import AppHeader from '../common/AppHeader';
 import AppFooter from '../common/AppFooter';
@@ -49,15 +56,21 @@ function displayWindowSize() {
 class App extends Component {
   componentDidMount(){
     new WOW.WOW().init();
-  }
 
+  }
   constructor(props) {
     super(props);
     this.state = {
       currentUser: null,
+      selectValue: null,
       isAuthenticated: false,
-      isLoading: false
+      isLoading: false,
+      brands : [],
+      familys : [],
+      models : []
     }
+
+    this.searchSubmit = this.searchSubmit.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
@@ -67,33 +80,106 @@ class App extends Component {
       top: 70,
       duration: 3,
     });
+
   }
 
-  loadCurrentUser() {
+  searchSubmit(e){
+    console.log("Searching ");
+    const s =e.target.value;
+    alert(s);
+  }
+
+componentDidMount(){
+  // for Brand LOV
+  let promise;
+    promise = getAllBrands(0, 50);
+        if(!promise) {
+            return;
+        }
+
+
+        promise
+        .then(response => {
+            const brands = this.state.brands.slice();
+            this.setState({
+                brands: brands.concat(response.content)
+            })
+          //  console.log('Here 3:'+brands);
+        }).catch(error => {
+            this.setState({
+                isLoading: false
+            })
+        });
+
+        // for Family LOV
+        let familyPromise;
+          familyPromise = getAllFamilys(0, 50);
+              if(!familyPromise) {
+                  return;
+              }
+
+
+              familyPromise
+              .then(response => {
+                  const familys = this.state.familys.slice();
+                  this.setState({
+                      familys: familys.concat(response.content)
+                  })
+                //  console.log('Here 3:'+brands);
+              }).catch(error => {
+                  this.setState({
+                      isLoading: false
+                  })
+              });
+              // for Model LOV
+              let modelPromise;
+                modelPromise = getAllModels(0, 50);
+                    if(!modelPromise) {
+                        return;
+                    }
+
+
+                    modelPromise
+                    .then(response => {
+                        const models = this.state.models.slice();
+                        this.setState({
+                            models: models.concat(response.content)
+                        })
+                      //  console.log('Here 3:'+brands);
+                    }).catch(error => {
+                        this.setState({
+                            isLoading: false
+                        })
+                    });
+}
+
+
+loadCurrentUser() {
+  this.setState({
+    isLoading: true
+  });
+  getCurrentUser()
+  .then(response => {
     this.setState({
-      isLoading: true
+      currentUser: response,
+      isAuthenticated: true,
+      isLoading: false
     });
-    getCurrentUser()
-    .then(response => {
-      this.setState({
-        currentUser: response,
-        isAuthenticated: true,
-        isLoading: false
-      });
-    }).catch(error => {
-      this.setState({
-        isLoading: false
-      });
+    console.log(" 1 :"+this.state.isAuthenticated);
+  }).catch(error => {
+    this.setState({
+      isLoading: false
     });
-  }
+  });
+}
 
-  componentWillMount() {
-    this.loadCurrentUser();
-  }
+componentWillMount() {
+  this.loadCurrentUser();
+}
 
   handleLogout(redirectTo="/", notificationType="success", description="You're successfully logged out.") {
     localStorage.removeItem(ACCESS_TOKEN);
-
+console.log(" 2 :"+this.state.isAuthenticated);
     this.setState({
       currentUser: null,
       isAuthenticated: false
@@ -118,11 +204,27 @@ class App extends Component {
 
 
   render() {
+    console.log(" 3 :"+this.state.isAuthenticated);
+    let brands = this.state.brands;
+    let optionItems = brands.map((brand) =>
+                <option value={brand.id} key={brand.id}>{brand.name}</option>
+            );
+    let familys = this.state.familys;
+    let familyOptionItems = familys.map((family) =>
+                <option key={family.id}>{family.name}</option>
+            );
+    let models = this.state.models;
+    let modelOptionItems = models.map((model) =>
+                <option key={model.id}>{model.name}</option>
+            );
+
+
     if(this.state.isLoading ) {
       return <LoadingIndicator />
     }
     if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
     return (
+      <form onSubmit={this.searchSubmit}>
         <Layout className="app-container">
           <AppHeader isAuthenticated={this.state.isAuthenticated}
             currentUser={this.state.currentUser}
@@ -135,6 +237,18 @@ class App extends Component {
                 <Route exact path="/"
                   render={(props) => <div></div>}>
                 </Route>
+                <Route exact path="/brands"
+                  render={(props) => <BrandList isAuthenticated={this.state.isAuthenticated}
+                      currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
+                </Route>
+                <Route exact path="/familys"
+                  render={(props) => <FamilyList isAuthenticated={this.state.isAuthenticated}
+                      currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
+                </Route>
+                <Route exact path="/models"
+                  render={(props) => <ModelList isAuthenticated={this.state.isAuthenticated}
+                      currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
+                </Route>
                 <Route path="/login"
                   render={(props) => <Login onLogin={this.handleLogin} {...props} />}></Route>
                 <Route path="/signup" component={Signup}></Route>
@@ -142,6 +256,9 @@ class App extends Component {
                   render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}  />}>
                 </Route>
                 <PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" component={NewPoll} handleLogout={this.handleLogout}></PrivateRoute>
+                <PrivateRoute authenticated={this.state.isAuthenticated} path="/brand/new" component={NewBrand} handleLogout={this.handleLogout}></PrivateRoute>
+                <PrivateRoute authenticated={this.state.isAuthenticated} path="/family/new" component={NewFamily} handleLogout={this.handleLogout}></PrivateRoute>
+                <PrivateRoute authenticated={this.state.isAuthenticated} path="/model/new" component={NewModel} handleLogout={this.handleLogout}></PrivateRoute>
                 <Route component={NotFound}></Route>
               </Switch>
 
@@ -164,18 +281,19 @@ class App extends Component {
                       <div className="flight-tab" align="center">
                          <div className="persent-one">
                             <i className="fa fa fa-caret-down" aria-hidden="true"></i>
-                            <input type="text" name="dep" className="textboxstyle" id="dep" placeholder="Brand"/>
+                            <select className="textboxstyle" onChange={this.searchSubmit}><option value='-1'>Select Brand</option><option value ='0'>ALL</option>{optionItems}</select>
                          </div>
+
                          <div className="persent-one">
                             <i className="fa fa-caret-down" aria-hidden="true"></i>
-                            <input type="text" name="dep" className="textboxstyle" id="arival" placeholder="Family"/>
+                            <select className="textboxstyle"><option key='-1'>Select Family</option><option key='0'>ALL</option>{familyOptionItems}</select>
                          </div>
                          <div className="persent-one">
                             <i className="fa fa fa-caret-down" aria-hidden="true"></i>
-                            <input type="text" name="dep" className="textboxstyle" id="from-date1" placeholder="Model"/>
+                            <select className="textboxstyle"><option key='-1'>Select Model</option><option key='0'>ALL</option>{modelOptionItems}</select>
                          </div>
                          <div className="persent-one less-btn">
-                            <input type="Submit" name="submit" value="Search" className="btn btn-info cst-btn" id="srch"/>
+                            <input type="submit" name="submit" value="Search" className="btn btn-info cst-btn" id="srch"/>
                          </div>
                       </div>
                 </div>
@@ -206,7 +324,7 @@ class App extends Component {
                 </Content>
                   <AppFooter></AppFooter>
                 </Layout>
-
+</form>
     );
     }else if (window.innerWidth > breakpoints.mobile) {/* For mobile */
       return (

@@ -24,7 +24,7 @@ class BrandList extends Component {
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 
-    loadBrandList(page = 0, size = POLL_LIST_SIZE) {
+ loadBrandList(page = 0, size = POLL_LIST_SIZE) {
         let promise;
         if(this.props.username) {
             if(this.props.type === 'USER_CREATED_POLLS') {
@@ -47,7 +47,7 @@ class BrandList extends Component {
         promise
         .then(response => {
             const brands = this.state.brands.slice();
-            console.log('heres  :'+brands);
+            console.log('here 2  :'+brands);
             this.setState({
                 brands: brands.concat(response.content),
                 page: response.page,
@@ -97,7 +97,7 @@ class BrandList extends Component {
                 brand={brand}
               />)
         });
-
+//console.log('heres  :'+this.state.brands.length);
         return (
             <div className="polls-container">
                 {brandViews}

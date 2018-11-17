@@ -1,19 +1,14 @@
 package com.example.polls.service;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
 
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,26 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.polls.exception.BadRequestException;
-import com.example.polls.exception.ResourceNotFoundException;
 import com.example.polls.model.Brand;
-import com.example.polls.model.Choice;
-import com.example.polls.model.ChoiceVoteCount;
-import com.example.polls.model.Poll;
-import com.example.polls.model.User;
-import com.example.polls.model.Vote;
 import com.example.polls.payload.BrandRequest;
-import com.example.polls.payload.BrandResponse;
 import com.example.polls.payload.PagedResponse;
-import com.example.polls.payload.PollRequest;
-import com.example.polls.payload.PollResponse;
-import com.example.polls.payload.VoteRequest;
 import com.example.polls.repository.BrandRepository;
-import com.example.polls.repository.PollRepository;
-import com.example.polls.repository.UserRepository;
-import com.example.polls.repository.VoteRepository;
 import com.example.polls.security.UserPrincipal;
 import com.example.polls.util.AppConstants;
-import com.example.polls.util.ModelMapper;
 @Service
 public class BrandService {
 
@@ -49,7 +30,7 @@ public class BrandService {
 
 
 
-    private static final Logger logger = LoggerFactory.getLogger(PollService.class);
+    private static final Logger logger = LoggerFactory.getLogger(BrandService.class);
 
     public PagedResponse<Brand> getAllBrands(UserPrincipal currentUser, int page, int size) {
         validatePageNumberAndSize(page, size);

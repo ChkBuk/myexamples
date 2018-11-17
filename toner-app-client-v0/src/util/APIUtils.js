@@ -134,3 +134,19 @@ export function createBrand(brandData) {
         body: JSON.stringify(brandData)
     });
 }
+export function getAllFamilys(page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/familys?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
+export function createFamily(familyData) {
+    return request({
+        url: API_BASE_URL + "/familys",
+        method: 'POST',
+        body: JSON.stringify(familyData)
+    });
+}

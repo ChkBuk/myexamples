@@ -10,6 +10,7 @@ import { getCurrentUser } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
 import PollList from '../poll/PollList';
 import BrandList from '../poll/BrandList';
+import FamilyList from '../poll/FamilyList';
 import NewPoll from '../poll/NewPoll';
 import NewBrand from '../poll/NewBrand';
 import Login from '../user/login/Login';
@@ -108,6 +109,10 @@ class App extends Component {
               </Route>
                 <Route exact path="/brands"
                   render={(props) => <BrandList isAuthenticated={this.state.isAuthenticated}
+                      currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
+                </Route>
+                <Route exact path="/familys"
+                  render={(props) => <FamilyList isAuthenticated={this.state.isAuthenticated}
                       currentUser={this.state.currentUser} handleLogout={this.handleLogout} {...props} />}>
                 </Route>
                 <Route path="/login"

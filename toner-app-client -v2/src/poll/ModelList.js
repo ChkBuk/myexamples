@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { getAllBrands, getUserCreatedPolls, getUserVotedPolls } from '../util/APIUtils';
-import Brand from './Brand';
+import { getAllModels, getUserCreatedPolls, getUserVotedPolls } from '../util/APIUtils';
+import Model from './Model';
 import { castVote } from '../util/APIUtils';
 import LoadingIndicator  from '../common/LoadingIndicator';
 import { Button, Icon, notification } from 'antd';
@@ -8,11 +8,11 @@ import { POLL_LIST_SIZE } from '../constants';
 import { withRouter } from 'react-router-dom';
 import './PollList.css';
 
-class BrandList extends Component {
+class ModelList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            brands: [],
+            models: [],
             page: 0,
             size: 10,
             totalElements: 0,
@@ -20,11 +20,11 @@ class BrandList extends Component {
             last: true,
             isLoading: false
         };
-        this.loadBrandList = this.loadBrandList.bind(this);
+        this.loadModelList = this.loadModelList.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
     }
 
-    loadBrandList(page = 0, size = POLL_LIST_SIZE) {
+    loadModelList(page = 0, size = POLL_LIST_SIZE) {
         let promise;
         if(this.props.username) {
             if(this.props.type === 'USER_CREATED_POLLS') {
@@ -33,10 +33,11 @@ class BrandList extends Component {
                 promise = getUserVotedPolls(this.props.username, page, size);
             }
         } else {
-            promise = getAllBrands(page, size);
+            promise = getAllModels(page, size);
         }
 
         if(!promise) {
+
             return;
         }
 
@@ -46,10 +47,10 @@ class BrandList extends Component {
 
         promise
         .then(response => {
-            const brands = this.state.brands.slice();
-            console.log('heres  :'+brands);
+            const models = this.state.models.slice();
+            console.log('models  :'+models);
             this.setState({
-                brands: brands.concat(response.content),
+                models: models.concat(response.content),
                 page: response.page,
                 size: response.size,
                 totalElements: response.totalElements,
@@ -62,18 +63,18 @@ class BrandList extends Component {
                 isLoading: false
             })
         });
-
+console.log('heres  :');
     }
 
     componentWillMount() {
-        this.loadBrandList();
+        this.loadModelList();
     }
 
     componentWillReceiveProps(nextProps) {
         if(this.props.isAuthenticated !== nextProps.isAuthenticated) {
             // Reset State
             this.setState({
-                brands: [],
+                models: [],
                 page: 0,
                 size: 10,
                 totalElements: 0,
@@ -81,30 +82,30 @@ class BrandList extends Component {
                 last: true,
                 isLoading: false
             });
-            this.loadBrandList();
+            this.loadModelList();
         }
     }
 
     handleLoadMore() {
-        this.loadBrandList(this.state.page + 1);
+        this.loadModelList(this.state.page + 1);
     }
 
     render() {
-        const brandViews = [];
-        this.state.brands.forEach((brand, brandIndex) => {
-            brandViews.push(<Brand
-                key={brand.id}
-                brand={brand}
+        const modelViews = [];
+        this.state.models.forEach((model, modelIndex) => {
+            modelViews.push(<Model
+                key={model.id}
+                model={model}
               />)
         });
 
         return (
             <div className="polls-container">
-                {brandViews}
+                {modelViews}
                 {
-                    !this.state.isLoading && this.state.brands.length === 0 ? (
-                        <div className="no-brands-found">
-                            <span>No Brands Found.</span>
+                    !this.state.isLoading && this.state.models.length === 0 ? (
+                        <div className="no-polls-found">
+                            <span>No Toner Models Found.</span>
                         </div>
                     ): null
                 }
@@ -125,4 +126,4 @@ class BrandList extends Component {
     }
 }
 
-export default withRouter(BrandList);
+export default withRouter(ModelList);

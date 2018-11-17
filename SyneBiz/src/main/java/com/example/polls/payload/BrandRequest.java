@@ -1,9 +1,12 @@
 package com.example.polls.payload;
 
+import java.util.Set;
+
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.example.polls.model.Family;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BrandRequest {
@@ -14,6 +17,8 @@ public class BrandRequest {
     @Lob @JsonProperty("image")
     private byte[] image;
     
+
+
 	public String getName() {
 		return name;
 	}
