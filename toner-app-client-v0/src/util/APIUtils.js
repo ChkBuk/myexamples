@@ -82,9 +82,9 @@ export function checkEmailAvailability(email) {
 
 export function getCurrentUser() {
     if(!localStorage.getItem(ACCESS_TOKEN)) {
+    //  console.log("No Access token set.");
         return Promise.reject("No access token set.");
     }
-
     return request({
         url: API_BASE_URL + "/user/me",
         method: 'GET'

@@ -47,7 +47,7 @@ class BrandList extends Component {
         promise
         .then(response => {
             const brands = this.state.brands.slice();
-            console.log('here 2  :'+brands);
+        //    console.log('here 2  :'+brands);
             this.setState({
                 brands: brands.concat(response.content),
                 page: response.page,

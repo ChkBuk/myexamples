@@ -32,7 +32,7 @@ public class BrandService {
 
     private static final Logger logger = LoggerFactory.getLogger(BrandService.class);
 
-    public PagedResponse<Brand> getAllBrands(UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<Brand> getAllBrands(int page, int size) {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Brands

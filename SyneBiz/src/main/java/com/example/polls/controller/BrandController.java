@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,15 +48,15 @@ public class BrandController {
     private static final Logger logger = LoggerFactory.getLogger(BrandController.class);
 
     @GetMapping
-    public PagedResponse<Brand> getBrands(@CurrentUser UserPrincipal currentUser,
-                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+    @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+    public PagedResponse<Brand> getBrands(@RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                                 @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
        
-    	return brandService.getAllBrands(currentUser, page, size);
+    	return brandService.getAllBrands(page, size);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createBrand(@Valid @RequestBody BrandRequest brandRequest) {
     	 System.out.println("****************brands**************************");
         Brand brand = brandService.createBrand(brandRequest);

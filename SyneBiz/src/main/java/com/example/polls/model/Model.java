@@ -45,7 +45,7 @@ public class Model extends UserDateAudit {
     private BigDecimal normal_price;
   
     private BigDecimal wholesale_price;
-    @JsonBackReference
+   // @JsonBackReference
     private long wholesale_qtn;
     
    

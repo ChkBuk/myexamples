@@ -1,6 +1,7 @@
 package com.example.polls.controller;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -8,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,9 +49,30 @@ public class ModelController {
        
     	return modelService.getAllModels(currentUser, page, size);
     }
-
+    @GetMapping("byfamily/{familyId}")
+    public PagedResponse<Model> getModelsByFamilyId(@PathVariable Long familyId,
+                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+       
+    	return modelService.findByFamilyIdIn(familyId, page, size);
+    }
+    
+    @GetMapping("bybrand/{brandId}")
+    public PagedResponse<Model> getModelsByBrandId(@PathVariable Long brandId,
+                                                @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+       
+    	return modelService.findByBrandIdIn(brandId, page, size);
+    }  
+    @GetMapping("bymodel/{modelId}")
+    public PagedResponse<Model> getModelsById(@PathVariable Long modelId,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+       
+    	return modelService.findById(modelId, page, size);
+    }  
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createBrand(@Valid @RequestBody ModelRequest modelRequest) {
         Model model = modelService.createModel(modelRequest);
 

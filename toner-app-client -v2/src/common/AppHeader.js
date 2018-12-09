@@ -41,12 +41,7 @@ class AppHeader extends Component {
                 <Icon type="home" className="nav-icon" />
               </Link>
             </Menu.Item>,
-            <Menu.Item key="/poll/new">
-            <Link to="/poll/new">
-              <img src={pollIcon} alt="poll" className="poll-icon" />
-            </Link>
-          </Menu.Item>,
-          <Menu.Item key="/profile" className="profile-menu">
+            <Menu.Item key="/profile" className="profile-menu">
                 <ProfileDropdownMenu
                   currentUser={this.props.currentUser}
                   handleMenuClick={this.handleMenuClick}/>
@@ -62,7 +57,7 @@ class AppHeader extends Component {
             </Menu.Item>
           ];
         }
-if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
+//if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
         return (
         <Header className="app-header">
             <div className="sub-header-1">
@@ -71,56 +66,20 @@ if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
                       <span className="fa fa-phone-square"><a href="#">(+65) 81132922</a></span>
                   </div>
                   <div className="breadcrumb-div">
-      								<ol className="breadcrumb">
-      									<li><a href="index.html">HOME</a></li>
-      									<li><a href="index.html">ABOUT US</a></li>
-      									<li><a href="index.html">PRODUCTS</a></li>
-                        <li><a href="index.html">OUR SERVICES</a></li>
-                        <li><a href="index.html">CONTACT</a></li>
-      								</ol>
+                      <Menu
+                        className="app-menu"
+                        mode="horizontal"
+                        selectedKeys={[this.props.location.pathname]}
+                        style={{ lineHeight: '58px' }} >
+                          {menuItems}
+                      </Menu>
                    </div>
+
              </div>
 
           </Header>
         );
-      }else if (window.innerWidth > breakpoints.mobile) {/* For tablet */
-        return (
-          <Header className="app-header">
 
-              <div className="phone-div">
-                  <span className="fa fa-phone-square"><a href="#">(+65) 81132922</a></span>
-              </div>
-              <div className="breadcrumb-div">
-                  <ol className="breadcrumb">
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="index.html">ABOUT US</a></li>
-                    <li><a href="index.html">PRODUCTS</a></li>
-                    <li><a href="index.html">OUR SERVICES</a></li>
-                    <li><a href="index.html">CONTACT</a></li>
-                  </ol>
-               </div>
-            </Header>
-          );
-      }else if (window.innerWidth <= breakpoints.mobile) { /* For mobile */
-        return (
-          <Header className="app-header">
-
-              <div className="phone-div">
-                  <span className="fa fa-phone-square"><a href="#">(+65) 81132922</a></span>
-              </div>
-              <div className="breadcrumb-div">
-                  <ol className="breadcrumb">
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="index.html">ABOUT US</a></li>
-                    <li><a href="index.html">PRODUCTS</a></li>
-                    <li><a href="index.html">OUR SERVICES</a></li>
-                    <li><a href="index.html">CONTACT</a></li>
-                  </ol>
-               </div>
-            </Header>
-
-        );
-      }
     }
 }
 

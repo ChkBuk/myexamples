@@ -22,7 +22,7 @@ body{
 	width: 156px;
   height: 180px;
   margin-left: 5px;
-  background-image: url("logo.png");
+  background-image: url("syne-biz-logo.png");
   background-repeat: no-repeat;
 }
 #description{
@@ -137,6 +137,46 @@ body{
 .container button{
   margin: 5px;
 }*/
+.col-md-3  {
+    text-align: left;
+}
+.wholesalepriceqtn{
+  margin-left: 5px;
+  font-size: 10px;
+}
+.brandname{
+  margin-left: 5px;
+}
+.modelname{
+  margin-left: 5px;
+}
+.price{
+    margin-left: 5px;
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #f57224;
+}
+.iscompatible{
+  margin-left: 5px;
+  font-size: 12px;
+}
+.cart {
+    float: right;
+}
+.cart input{
+  width: 80px;
+  height: 30px;
+  margin-left: 5px;
+  font-size: 12px;
+  border: 1px solid #f57224;
+  background: #f57224;
+  color: #fff;
+}
+.last-row{
+  width: 95%;
+  float: left;
+}
 .bg-dark {
       background-color: #005999 !important;
 }
@@ -264,4 +304,7 @@ display: inline-block;
   background: #24201d;/* fallback for old browsers */
   background: -webkit-linear-gradient(to top, #5fce9d, #04b5f8, #24201d);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to top, #24201d,#04b5f8,#5fce9d);
+}
+.container{
+  width:90%;
 }

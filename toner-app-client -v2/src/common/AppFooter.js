@@ -18,9 +18,9 @@ class AppFooter extends Component {
                 <div class="container">
                   <div class="row">
                     <div class="col-md-3 col-sm-6 footer-col">
-                      <div id="logo" className="column">
+                      <div id="logo-footer" className="column">
                       </div>
-                      <p>Syne biz is one of a leading Toner & catridge supplying company in Singapore over the 25 years.</p>
+                      <p>Syne Biz is one of a leading Printers,Toner & Catridge supplying company in Singapore over the 25 years.</p>
 
                     </div>
                     <div class="col-md-3 col-sm-6 footer-col">
@@ -37,9 +37,9 @@ class AppFooter extends Component {
                     <div class="col-md-3 col-sm-6 footer-col">
                       <h6 class="heading7">Contact Us</h6>
                       <div class="post">
-                      <p><i class="fa fa-map-pin"></i> Blk106A, #02-656,Depot Road, Singapore, 101106</p>
+                      <p><i class="fa fa-map-pin"></i>Syne Biz, 10 Anson Road,#10-11 International Plaza, Singapore 079903</p>
                       <p><i class="fa fa-phone"></i> Phone (Singapore) : (+65) 811 329 22</p>
-                      <p><i class="fa fa-envelope"></i> E-mail : info@synebiz.net</p>
+                      <p><i class="fa fa-envelope"></i> E-mail : info@syneb.com</p>
                      </div>
                      </div>
                     <div class="col-md-3 col-sm-6 footer-col">

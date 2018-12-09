@@ -10,7 +10,7 @@ import {
   Switch
 } from 'react-router-dom';
 
-import { getCurrentUser,getAllBrands,getAllFamilys,getAllModels } from '../util/APIUtils';
+import { searchModes,getCurrentUser,getAllBrands,getAllFamilys,getFamilysByBrandId,getModelsByFamilyId,getModelsByBrandId,getAllModels,getModelsById } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
 import PollList from '../poll/PollList';
 import NewPoll from '../poll/NewPoll';
@@ -29,8 +29,9 @@ import AppFooter from '../common/AppFooter';
 import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
 import PrivateRoute from '../common/PrivateRoute';
-import { Layout, notification } from 'antd';
-
+import { Form,Layout, notification ,Input, Button, Icon} from 'antd';
+import { Footer, Card, CardBody, CardImage, CardTitle, CardText } from 'mdbreact';
+import InputRange from 'react-input-range';
 
 const  {Content}  = Layout;
 const breakpoints = {
@@ -39,7 +40,6 @@ tablet: 840,
 mobile: 540
 };
 
-//var wow =new WOW.WOW().init();
 var myWidth = 0, myHeight = 0;
 window.onresize = displayWindowSize;
 //window.onload = displayWindowSize;
@@ -47,8 +47,6 @@ window.onresize = displayWindowSize;
 function displayWindowSize() {
     myWidth = window.innerWidth;
     myHeight = window.innerHeight;
-    // your size calculation code here
-    //document.getElementById("dimensions").innerHTML = myWidth + "x" + myHeight;
 };
 
 
@@ -56,7 +54,6 @@ function displayWindowSize() {
 class App extends Component {
   componentDidMount(){
     new WOW.WOW().init();
-
   }
   constructor(props) {
     super(props);
@@ -67,14 +64,16 @@ class App extends Component {
       isLoading: false,
       brands : [],
       familys : [],
-      models : []
+      models : [],
+      searchResult :[]
     }
 
-    this.searchSubmit = this.searchSubmit.bind(this);
+    this.changeFamilyLOV = this.changeFamilyLOV.bind(this);
+    this.changeBrandLOV = this.changeBrandLOV.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
-
+    this.handleSubmit = this.handleSubmit.bind(this);
     notification.config({
       placement: 'topRight',
       top: 70,
@@ -83,14 +82,105 @@ class App extends Component {
 
   }
 
-  searchSubmit(e){
-    console.log("Searching ");
-    const s =e.target.value;
-    alert(s);
-  }
+  handleSubmit(e) {
+    e.preventDefault();
+    let selectedBrandId = parseInt(this.brandOption.value);
+    let selectedFamilydId = parseInt(this.familyOption.value);
+    let selectedModelId = parseInt(this.modelOption.value);
 
+
+    let searchPromise;
+
+    if(selectedBrandId===0 && selectedFamilydId===0 && selectedModelId===0){
+      searchPromise = getAllModels(0,50);
+    }else if(selectedBrandId >= 0 && selectedFamilydId > 0 && selectedModelId===0){
+      searchPromise = getModelsByFamilyId(selectedFamilydId,0,50);
+    }else if(selectedBrandId >= 0 && selectedFamilydId >= 0 && selectedModelId > 0){
+      searchPromise = getModelsById(selectedModelId,0,50);
+    }else if(selectedBrandId > 0 && selectedFamilydId === 0 && selectedModelId === 0){
+      searchPromise = getModelsByBrandId(selectedBrandId,0,50);
+    }else{
+      console.log('Please select...!');
+        searchResult : [];
+    }
+
+
+
+
+    if(!searchPromise) {
+        return;
+    }
+    searchPromise
+    .then(response => {
+        const searchResult = [];
+        this.setState({
+            searchResult: searchResult.concat(response.content)
+        })
+      //  console.log('Here 3:'+brands);
+    }).catch(error => {
+        this.setState({
+            isLoading: false
+        })
+    });
+ }
+
+  changeBrandLOV(e){
+    const s =e.target.value;
+  let familyPromise:[];
+   if(s>0){ // Brand = ALL
+      familyPromise = getFamilysByBrandId(s,0,50);
+    }else if(s===0){
+      familyPromise = getAllFamilys(0,50);
+    }else{
+
+    }
+          if(!familyPromise) {
+              return;
+          }
+
+
+          familyPromise
+          .then(response => {
+              const familys = [];
+              this.setState({
+                  familys: familys.concat(response.content)
+              })
+            //  console.log('Here 3:'+brands);
+          }).catch(error => {
+              this.setState({
+                  isLoading: false
+              })
+          });
+  }
+  changeFamilyLOV(e){
+    const s2 =e.target.value;
+    let modelPromise;
+   if(s2>0){ // Famimly = ALL
+      modelPromise = getModelsByFamilyId(s2,0,50);
+    }else if(s2===0){
+      modelPromise = getModelsByBrandId(0,50);
+    }else{
+      modelPromise = getAllModels(0,50);
+    }
+          if(!modelPromise) {
+              return;
+          }
+          modelPromise
+          .then(response => {
+              const models = [];
+              this.setState({
+                  models: models.concat(response.content)
+              })
+            //  console.log('Here 3:'+brands);
+          }).catch(error => {
+              this.setState({
+                  isLoading: false
+              })
+          });
+  }
 componentDidMount(){
   // for Brand LOV
+
   let promise;
     promise = getAllBrands(0, 50);
         if(!promise) {
@@ -104,16 +194,17 @@ componentDidMount(){
             this.setState({
                 brands: brands.concat(response.content)
             })
-          //  console.log('Here 3:'+brands);
+
         }).catch(error => {
             this.setState({
                 isLoading: false
             })
         });
-
+//console.log('Here 3...........:');
         // for Family LOV
+
         let familyPromise;
-          familyPromise = getAllFamilys(0, 50);
+          familyPromise = getAllFamilys(0,50);
               if(!familyPromise) {
                   return;
               }
@@ -155,6 +246,7 @@ componentDidMount(){
 
 
 loadCurrentUser() {
+  //console.log(" here ...."+this.state.isAuthenticated);
   this.setState({
     isLoading: true
   });
@@ -165,11 +257,12 @@ loadCurrentUser() {
       isAuthenticated: true,
       isLoading: false
     });
-    console.log(" 1 :"+this.state.isAuthenticated);
+    //console.log(" 1 :"+this.state.isAuthenticated);
   }).catch(error => {
     this.setState({
       isLoading: false
     });
+    //  console.log(" 2 :"+this.state.isAuthenticated);
   });
 }
 
@@ -179,7 +272,7 @@ componentWillMount() {
 
   handleLogout(redirectTo="/", notificationType="success", description="You're successfully logged out.") {
     localStorage.removeItem(ACCESS_TOKEN);
-console.log(" 2 :"+this.state.isAuthenticated);
+//console.log(" 2 :"+this.state.isAuthenticated);
     this.setState({
       currentUser: null,
       isAuthenticated: false
@@ -202,29 +295,75 @@ console.log(" 2 :"+this.state.isAuthenticated);
     this.props.history.push("/");
   }
 
+  state = {
+       search : ""
+   }
+   renderModel = model =>{
+       const {search} = this.state;
+       var code = model.id
+       let image = 'data:image/jpeg;base64, '+model.image;
+      // console.log("ABCD...."+code);    Footer, Card, CardBody, CardImage, CardTitle, CardText
+       return <div className="col-md-3" style={{ marginTop : '10px' }}>
+           <Card>
+               <CardBody>
+                   <p className=""><img src={image} alt={model.id} /></p>
+               </CardBody>
+               <CardText>
+                 <div className="brandname">{model.brand.name} - {model.name}</div>
+                 <div className="modelname"></div>
+                 <div className="price">SGD {model.normal_price}</div>
+                 <div className="last-row">
+                         <div className="cart"><input type="button" value="Add to cart"/></div>
+                         <div className="wholesalepriceqtn">Wholesale Price/Qtn: SGD {model.wholesale_price}/{model.wholesale_qtn}</div>
+                         <div className="iscompatible">Compatible : {model.iscompatible}</div>
 
-  render() {
-    console.log(" 3 :"+this.state.isAuthenticated);
+                 </div>
+               </CardText>
+           </Card>
+       </div>
+   }
+   searchHandler = e =>{
+       this.setState({ search : e.target.value });
+   }
+  render(){
+
+
+  //  console.log(":"+this.state.isAuthenticated);
     let brands = this.state.brands;
-    let optionItems = brands.map((brand) =>
+    let brandOptionItems = brands.map((brand) =>
                 <option value={brand.id} key={brand.id}>{brand.name}</option>
             );
     let familys = this.state.familys;
     let familyOptionItems = familys.map((family) =>
-                <option key={family.id}>{family.name}</option>
+                <option value={family.id} key={family.id}>{family.name}</option>
             );
     let models = this.state.models;
     let modelOptionItems = models.map((model) =>
-                <option key={model.id}>{model.name}</option>
+                <option value={model.id} key={model.id}>{model.name}</option>
             );
 
+  const {search} = this.state;
+  let searchResult = this.state.searchResult;
+  let filteredSearchResult = searchResult;
+  var modelList = [];
+  for (var key in searchResult) {
+    modelList.push(searchResult[key]);
+  }
+
+  if(this.state.search !=  null){
+    //console.log("search :"+(this.state.search).toLowerCase());
+    filteredSearchResult =  modelList.filter( model =>{
+           return (model.name.toLowerCase().indexOf(search.toLowerCase()) !== -1) || (model.normal_price >= search);
+         })
+
+  }
 
     if(this.state.isLoading ) {
       return <LoadingIndicator />
     }
-    if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
+  //  if(window.innerWidth > breakpoints.tablet){/* For Desktop*/
     return (
-      <form onSubmit={this.searchSubmit}>
+      <form onSubmit={this.handleSubmit}>
         <Layout className="app-container">
           <AppHeader isAuthenticated={this.state.isAuthenticated}
             currentUser={this.state.currentUser}
@@ -281,16 +420,16 @@ console.log(" 2 :"+this.state.isAuthenticated);
                       <div className="flight-tab" align="center">
                          <div className="persent-one">
                             <i className="fa fa fa-caret-down" aria-hidden="true"></i>
-                            <select className="textboxstyle" onChange={this.searchSubmit}><option value='-1'>Select Brand</option><option value ='0'>ALL</option>{optionItems}</select>
+                            <select ref = {(input)=> this.brandOption = input} className="textboxstyle" onChange={this.changeBrandLOV}><option value='-1'>Select Brand</option><option value ='0'>ALL</option>{brandOptionItems}</select>
                          </div>
 
                          <div className="persent-one">
                             <i className="fa fa-caret-down" aria-hidden="true"></i>
-                            <select className="textboxstyle"><option key='-1'>Select Family</option><option key='0'>ALL</option>{familyOptionItems}</select>
+                            <select ref = {(input)=> this.familyOption = input} className="textboxstyle" onChange={this.changeFamilyLOV}><option value='-1'>Select Family</option><option value ='0'>ALL</option>{familyOptionItems}</select>
                          </div>
                          <div className="persent-one">
                             <i className="fa fa fa-caret-down" aria-hidden="true"></i>
-                            <select className="textboxstyle"><option key='-1'>Select Model</option><option key='0'>ALL</option>{modelOptionItems}</select>
+                            <select ref = {(input)=> this.modelOption = input} className="textboxstyle"><option value='-1'>Select Model</option><option value='0'>ALL</option>{modelOptionItems}</select>
                          </div>
                          <div className="persent-one less-btn">
                             <input type="submit" name="submit" value="Search" className="btn btn-info cst-btn" id="srch"/>
@@ -299,6 +438,25 @@ console.log(" 2 :"+this.state.isAuthenticated);
                 </div>
              </div>
              </div>
+
+                 <main style={{marginTop: '4rem'}}>
+                       <div className="container">
+                           <div className="row">
+                               <div className="col"></div>
+                               <div className="col">
+                                   <Input label="Search Model" icon="search" onChange={this.searchHandler}/>
+                               </div>
+                               <div className="col"></div>
+                           </div>
+                           <div className="row">
+                               {
+                                   filteredSearchResult.map( model =>{
+                                       return this.renderModel(model)
+                                   })
+                               }
+                           </div>
+                       </div>
+                   </main>
 
                   <div className="brands-image" align="center">
 
@@ -326,133 +484,7 @@ console.log(" 2 :"+this.state.isAuthenticated);
                 </Layout>
 </form>
     );
-    }else if (window.innerWidth > breakpoints.mobile) {/* For mobile */
-      return (
-          <Layout className="app-container">
-            <AppHeader isAuthenticated={this.state.isAuthenticated}
-              currentUser={this.state.currentUser}
-              onLogout={this.handleLogout} />
 
-        <Content className="app-content">
-        <div className="app-middle">
-
-        <div className="col-3t menu">
-            <div class="container">
-                    <div class="row card-body py-2 mb-3 bg-dark twhite">
-                      <h5><i class="fa fa-car"></i> Search Options</h5>
-                    </div>
-                    <div class="form-group">
-                      <select class="form-control" id="conditionsselect1">
-                        <option>Brand</option>
-                        <option>New</option>
-                        <option>Used</option>
-                      </select>
-                     </div>
-                    <div class="form-group">
-                      <select class="form-control" id="conditionsselect2">
-                        <option>Family</option>
-                        <option>Compact</option>
-                        <option>Convertible</option>
-                        <option>Coupe</option>
-                        <option>Off-road</option>
-                        <option>Sedan</option>
-                      </select>
-                     </div>
-                    <div class="form-group">
-                      <select class="form-control" id="make1">
-                        <option>Model</option>
-                        <option>Ford</option>
-                        <option>Hyundai</option>
-                        <option>Kia</option>
-                        <option>Honda</option>
-                        <option>Skoda</option>
-                      </select>
-                     </div>
-                    <hr></hr>
-                    <button type="btn" class="btn btn-primary">Find Now</button>
-                    <button type="btn" class="btn btn-primary">Reset All</button>
-                    <div class="pb-3"></div>
-                </div>
-        </div>
-
-        <div className="col-6t">
-
-              <div className="app-content-text-t">Toner & Cartridges<p>Instantly save 5% & free shiping</p></div>
-              <div className="col-7t">
-                    <img src={require("./2.png")} />
-              </div>
-        </div>
-        </div>
-        <div className="col-12">
-        <div className="brands-image" >
-            <img src={require("./images/brands/brother.png")} />
-            <img src={require("./images/brands/canon.png")} />
-            <img src={require("./images/brands/dell.png")} />
-            <img src={require("./images/brands/epson.png")} />
-            <img src={require("./images/brands/hp.png")} />
-
-            <img src={require("./images/brands/konica-minolta.png")} />
-            <img src={require("./images/brands/kyocer.png")} />
-            <img src={require("./images/brands/lanier.png")} />
-            <img src={require("./images/brands/lexmark.png")} />
-            <img src={require("./images/brands/oki.png")} />
-
-            <img src={require("./images/brands/panasonic.png")} />
-            <img src={require("./images/brands/richo.png")} />
-            <img src={require("./images/brands/samsung.png")} />
-            <img src={require("./images/brands/sharp.png")} />
-            <img src={require("./images/brands/toshiba.png")} />
-
-        </div>
-        </div>
-            <div className="footer">
-              <p id="dimensions">Footer</p>
-
-            </div>
-            </Content>
-          </Layout>
-
-      );
-    } else if (window.innerWidth <= breakpoints.mobile) { /* For mobile */
-      return (
-          <Layout className="app-container">
-            <AppHeader isAuthenticated={this.state.isAuthenticated}
-              currentUser={this.state.currentUser}
-              onLogout={this.handleLogout} />
-
-              <Content className="app-content">
-
-              <div className="app-content-img fadeInRight animated">
-                <img src={require("./3.png")} />
-              </div>
-                <div className="col-12">
-                  <div className="brands-image" >
-                      <img src={require("./images/brands/brother.png")} />
-                      <img src={require("./images/brands/canon.png")} />
-                      <img src={require("./images/brands/dell.png")} />
-                      <img src={require("./images/brands/epson.png")} />
-                      <img src={require("./images/brands/hp.png")} />
-
-                      <img src={require("./images/brands/konica-minolta.png")} />
-                      <img src={require("./images/brands/kyocer.png")} />
-                      <img src={require("./images/brands/lanier.png")} />
-                      <img src={require("./images/brands/lexmark.png")} />
-                      <img src={require("./images/brands/oki.png")} />
-
-                      <img src={require("./images/brands/panasonic.png")} />
-                      <img src={require("./images/brands/richo.png")} />
-                      <img src={require("./images/brands/samsung.png")} />
-                      <img src={require("./images/brands/sharp.png")} />
-                      <img src={require("./images/brands/toshiba.png")} />
-
-                  </div>
-                </div>
-
-                </Content>
-                </Layout>
-
-      );
-    }
   }
 }
 

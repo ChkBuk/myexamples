@@ -82,14 +82,15 @@ export function checkEmailAvailability(email) {
 
 export function getCurrentUser() {
     if(!localStorage.getItem(ACCESS_TOKEN)) {
-      console.log("No Access token set.");
+    //  console.log("No Access token set........");
         return Promise.reject("No access token set.");
     }
-console.log("Access token set.");
+  //  console.log("Access token set. 1");
     return request({
         url: API_BASE_URL + "/user/me",
         method: 'GET'
     });
+
 }
 
 export function getUserProfile(username) {
@@ -152,6 +153,15 @@ export function getAllFamilys(page, size) {
         method: 'GET'
     });
 }
+export function getFamilysByBrandId(brandId, page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/familys/" + brandId + "?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
 export function createFamily(familyData) {
     return request({
         url: API_BASE_URL + "/familys",
@@ -168,6 +178,32 @@ export function getAllModels(page, size) {
         method: 'GET'
     });
 }
+export function getModelsByFamilyId(familyId, page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/models/byfamily/" + familyId + "?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
+export function getModelsByBrandId(brandId, page, size) {
+    page = page || 0;
+    size = size || POLL_LIST_SIZE;
+
+    return request({
+        url: API_BASE_URL + "/models/bybrand/" + brandId + "?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
+export function getModelsById(modelId, page, size) {
+  page = page || 0;
+  size = size || POLL_LIST_SIZE;
+    return request({
+        url: API_BASE_URL + "/models/bymodel/" + modelId+ "?page=" + page + "&size=" + size,
+        method: 'GET'
+    });
+}
 export function createModel(modelData) {
   console.log(" modelData :"+modelData.normal_price);
     return request({
@@ -175,4 +211,13 @@ export function createModel(modelData) {
         method: 'POST',
         body: JSON.stringify(modelData)
     });
+}
+export function searchModes(page, size) {
+  page = page || 0;
+  size = size || POLL_LIST_SIZE;
+
+  return request({
+      url: API_BASE_URL + "/models?page=" + page + "&size=" + size,
+      method: 'GET'
+  });
 }

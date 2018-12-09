@@ -33,7 +33,7 @@ public class FamilyService {
 	 
 	 public PagedResponse<Family> getAllFamilys(UserPrincipal currentUser, int page, int size) {
 	        validatePageNumberAndSize(page, size);
-	        System.out.println("******************** "+page+"  ******** "+size);
+	        //System.out.println("******************** "+page+"  ******** "+size);
 	        // Retrieve Familys
 	        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
 	        Page<Family> familys = familyRepository.findAll(pageable);
@@ -46,7 +46,21 @@ public class FamilyService {
 	        List<Family> familyResponses=familys.getContent();
 	        return new PagedResponse<>(familyResponses ,familys.getNumber(),familys.getSize(), familys.getTotalElements(), familys.getTotalPages(), familys.isLast());
 	    }
-	 
+	  public PagedResponse<Family> getFamilysByBrandId(Long brandId,int page, int size) {
+	        validatePageNumberAndSize(page, size);
+	        System.out.println("******************** "+page+"  ******** "+size);
+	        // Retrieve Familys
+	        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+	        Page<Family> familys = familyRepository.findByBrandIdIn(brandId,pageable);
+
+	        if(familys.getNumberOfElements() == 0) {
+	            return new PagedResponse<>(Collections.emptyList(), familys.getNumber(),
+	            		familys.getSize(), familys.getTotalElements(), familys.getTotalPages(), familys.isLast());
+	        }
+
+	        List<Family> familyResponses=familys.getContent();
+	        return new PagedResponse<>(familyResponses ,familys.getNumber(),familys.getSize(), familys.getTotalElements(), familys.getTotalPages(), familys.isLast());
+	    }
 	    private void validatePageNumberAndSize(int page, int size) {
 	        if(page < 0) {
 	            throw new BadRequestException("Page number cannot be less than zero.");

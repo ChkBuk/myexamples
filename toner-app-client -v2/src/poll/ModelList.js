@@ -63,7 +63,7 @@ class ModelList extends Component {
                 isLoading: false
             })
         });
-console.log('heres  :');
+//console.log('heres  :');
     }
 
     componentWillMount() {
