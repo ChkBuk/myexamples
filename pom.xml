@@ -21,9 +21,9 @@
 	
 	<properties>	
 	  <INSTANCE_CONNECTION_NAME>tonerproject-224917:us-central1:synebizinstance2</INSTANCE_CONNECTION_NAME>
-	  <user>synbizdbuser</user>
-	  <password>S81132922F</password>
-	  <database>synebizdb</database>
+	  <user>dsfdbuser</user>
+	  <password>dsfds</password>
+	  <database>dsfzdb</database>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
